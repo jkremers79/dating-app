@@ -1,5 +1,7 @@
 'use strict';
 
+const prompt = require('prompt-sync')();
+
 const mockData = require('./mockData.js').data;
 
 // Your code here
@@ -11,7 +13,7 @@ console.log(`Hej! Welcome to the Win-Winc dating app. Please provide us with you
 
 while (true) {
 
-  const firstName = prompt("What is your first name?");
+  const firstName = prompt("What is your first name? ");
 
   if (firstName === "") {
     console.log("Please provide your first name");
@@ -27,7 +29,7 @@ while (true) {
 
 while (true) {
 
-  const lastName = prompt("What is your last name?");
+  const lastName = prompt("What is your last name? ");
 
   if (lastName === "") {
     console.log("Please provide your last name");
@@ -43,14 +45,9 @@ while (true) {
 
 while (true) {
 
-  const age = Number(prompt("What is your age"));
+  const age = Number(prompt("What is your age? "));
 
-  if (Number.isNaN(age)) {
-    console.log("Please provide your age");
-    continue;
-  }
-
-  else if (age == "") {
+  if (Number.isNaN(age) || age === "") {
     console.log("Please provide your age");
     continue;
   }
@@ -64,7 +61,7 @@ while (true) {
 
 while (true) {
 
-  const gender = prompt("What is your gender (M/F/X)?");
+  const gender = prompt("What is your gender (M/F/X)? ");
 
   if (
     gender === "M"
@@ -84,7 +81,7 @@ while (true) {
 
 while (true) {
 
-  const genderInterest = prompt("Which gender are you interested in? (M/F/X/B)");
+  const genderInterest = prompt("Which gender are you interested in? (M/F/X/B) ");
 
   if (
     genderInterest === "M"
@@ -105,7 +102,7 @@ while (true) {
 
 while (true) {
 
-  const location = prompt("Where do you live? (city/rural)");
+  const location = prompt("Where do you live? (city/rural) ");
 
   if (
     location === "city"
@@ -126,7 +123,7 @@ while (true) {
 let minAge;
 while (true) {
 
-  minAge = Number(prompt("What is the minimum age you are interested in?"));
+  minAge = Number(prompt("What is the minimum age you are interested in? "));
 
   if (Number.isNaN(minAge) || minAge === "") {
     console.log("Please provide the minimum age you're interested in.");
@@ -146,9 +143,9 @@ while (true) {
 
 while (true) {
 
-  const maxAge = Number(prompt("What is the maximum age you are interested in?"));
+  const maxAge = Number(prompt("What is the maximum age you are interested in? "));
 
-  if (Number.isNaN(maxAge)) {
+  if (Number.isNaN(maxAge) || maxAge === "") {
     console.log("Please provide the maximum age you're interested in.");
     continue;
   }
@@ -168,30 +165,41 @@ while (true) {
 
 }
 
-//storing object 'userProfile' values in strings for comparison
-const userFirstName = userProfile.first_name;
-const userAge = userProfile.age;
-const userMinAge = userProfile.min_age_interest;
-const userMaxAge = userProfile.max_age_interest;
-const userLocation = userProfile.location;
-const userGender = userProfile.gender;
-const userGenderInterest = userProfile.gender_interest
+//Destructering the 'userProfile' object values in variables.
+const {
+
+  first_name: userFirstName,
+  age: userAge,
+  min_age_interest: userMinAge,
+  max_age_interest: userMaxAge,
+  location: userLocation,
+  gender: userGender,
+  gender_interest: userGenderInterest
+
+} = userProfile;
 
 //Array for storing the matches' names, so they can be displayed later.
 const matchesFirstNames = [];
 
+
+//Start of comparison program
 for (const match of mockData) {
 
-  //storing object 'match' values in strings for comparison
-  const matchFirstName = match.first_name;
-  const matchAge = match.age;
-  const matchMinAge = match.min_age_interest;
-  const matchMaxAge = match.max_age_interest;
-  const matchLocation = match.location;
-  const matchGender = match.gender;
-  const matchGenderInterest = match.gender_interest;
+  //Destructering the object 'match' values in variables.
+  const {
+
+    first_name: matchFirstName,
+    age: matchAge,
+    min_age_interest: matchMinAge,
+    max_age_interest: matchMaxAge,
+    location: matchLocation,
+    gender: matchGender,
+    gender_interest: matchGenderInterest
+
+  } = match;
 
 
+  //Compare user and match for matching conditions.
   if (userAge >= matchMinAge
     && userAge <= matchMaxAge) { }
   else { continue; }
@@ -242,22 +250,25 @@ for (const match of mockData) {
   } else { continue; }
 
 }
+//End of comparison program
+
+
+//Display match information
 
 const numberOfMatches = matchesFirstNames.length;
 
 console.log(`\n`);
 
-console.log(`${userFirstName}, you have ${numberOfMatches} match(es)!`);
+if (numberOfMatches > 0) {
+  console.log(`${userFirstName}, you have ${numberOfMatches} match(es)!`);
+}
 
-//seperating the first matches from the last one
-const firstMatches = matchesFirstNames.slice(0, -1);
-const lastMatch = matchesFirstNames.slice(-1);
+//seperating the first matches from the last one, and storing them in a string.
+const firstMatchesNames = matchesFirstNames.slice(0, -1).join(', ');
+const lastMatchName = matchesFirstNames.slice(-1).join('');
 
-//storing the values of 'firstMatches' and 'lastMatch' arrays in strings.
-const firstMatchesNames = firstMatches.join(', ');
-const lastMatchName = lastMatch.join('');
 
-if (firstMatchesNames === "" && lastMatchName === "") {
+if (numberOfMatches < 1) {
   console.log("You have no matches");
 }
 else if (firstMatchesNames === "" && lastMatchName !== "") {
